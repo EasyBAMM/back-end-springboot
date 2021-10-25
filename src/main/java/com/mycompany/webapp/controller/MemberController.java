@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mycompany.webapp.dto.Member;
+import com.mycompany.webapp.security.JwtUtil;
 import com.mycompany.webapp.service.MemberService;
 import com.mycompany.webapp.service.MemberService.JoinResult;
 
@@ -61,6 +62,25 @@ public class MemberController {
 
 	/* 로그인 */
 	/* 스프링 시큐리티, 세션인증방식 */
+//	@RequestMapping("/login1")
+//	public Map<String, String> login1(String mid, String mpassword) {
+//		log.info("실행");
+//		if (mid == null || mpassword == null) {
+//			throw new BadCredentialsException("아이디 또는 패스워드가 입력되지 않았습니다.");
+//		}
+//		// Spring Security 사용자 인증하기
+//		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(mid, mpassword);
+//		Authentication authentication = authenticationManager.authenticate(token);
+//		SecurityContext securityContext = SecurityContextHolder.getContext();
+//		securityContext.setAuthentication(authentication);
+//
+//		// 응답 내용
+//		Map<String, String> map = new HashMap<>();
+//		map.put("result", "success");
+//		return map;
+//	}
+
+	/* JWT 기반 인증 방식 */
 	@RequestMapping("/login1")
 	public Map<String, String> login1(String mid, String mpassword) {
 		log.info("실행");
@@ -74,8 +94,11 @@ public class MemberController {
 		securityContext.setAuthentication(authentication);
 
 		// 응답 내용
+		String authority = authentication.getAuthorities().iterator().next().toString();
 		Map<String, String> map = new HashMap<>();
 		map.put("result", "success");
+		map.put("mid", mid);
+		map.put("jwt", JwtUtil.createToken(mid, authority));
 		return map;
 	}
 
@@ -85,5 +108,4 @@ public class MemberController {
 		return login1(member.getMid(), member.getMpassword());
 	}
 
-	/* JWT 기반 인증 방식 */
 }

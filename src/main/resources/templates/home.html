@@ -119,8 +119,8 @@
 						data: {mid, mpassword}
 					}).done((data) => {
 						console.log(data);
-						/* sessionStorage.setItem("mid", data.mid);
-					    sessionStorage.setItem("jwt", data.jwt); */
+						sessionStorage.setItem("mid", data.mid);
+					    sessionStorage.setItem("jwt", data.jwt);
 					});
 				}
 				
@@ -135,8 +135,8 @@
 						processData: false //data를 QueryString으로 표현하지 않음
 					}).done((data) => {
 						console.log(data);
-						/* sessionStorage.setItem("mid", data.mid);
-					    sessionStorage.setItem("jwt", data.jwt); */
+						sessionStorage.setItem("mid", data.mid);
+					    sessionStorage.setItem("jwt", data.jwt);
 					});
 				}
 			</script>
@@ -152,6 +152,7 @@
 		<div>
 			<a href="javascript:authTest1()" class="btn btn-info btn-sm mr2">GET /board/test(without jwt)</a>
 			<a href="javascript:authTest2()" class="btn btn-info btn-sm">GET /board/test(with jwt)</a>
+			<a href="javascript:authTest3()" class="btn btn-info btn-sm">GET /board/test(with jwt, cors)</a>
 			<script th:inline="javascript">
 				function authTest1() {
 					$.ajax({
@@ -164,6 +165,15 @@
 				function authTest2() {
 					$.ajax({
 						url: "[(@{/board/test})]",
+						headers: {Authorization:`Bearer ${sessionStorage.getItem("jwt")}`},
+					}).done((data) => {
+						console.log(data);
+					});
+				}
+				
+				function authTest3() {
+					$.ajax({
+						url: "http://kosa3.iptime.org/board/test",
 						headers: {Authorization:`Bearer ${sessionStorage.getItem("jwt")}`},
 					}).done((data) => {
 						console.log(data);
@@ -409,6 +419,7 @@
 					const bno = $("#downloadAttachForm [name=bno]").val();
 					const url = "[(@{/board/battach/})]" + bno;
 					const jwt = "jwt=" + sessionStorage.getItem("jwt");
+					// <img src="http://localhost/board/battach/424?jwt=xxx"
 					$("#attachImg").attr("src", `${url}?${jwt}`);
 				}
 			</script>
